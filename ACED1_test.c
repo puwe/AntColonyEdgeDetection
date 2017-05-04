@@ -420,7 +420,7 @@ void process_file(void)
 
                     }
                     unsigned int c_max = 4;
-                    for(c=0; c<9 && c!=4; c++){
+                    for(c=0; c<9; c++){
                         if(p[c]>p_max){
                             p_max = p[c];
                             c_max = c;
@@ -430,6 +430,23 @@ void process_file(void)
                     float p_r = (float) rand()/RAND_MAX;
                     if(p_r<p_th){
                         c_max = rand()%9;
+                    }
+
+                    if(c_max==4){
+                        c = 0;
+                        do{
+                            r = rand()%A;
+                            for(q=0; q<k; q++){
+                                if(ants[q][0] == r || eta[r] < t){
+                                    break;                       
+                                }
+                            }
+                            c++;
+                        }while(q<k&&c<A);
+                        ants[k][l] = r;
+                        i = r/width;
+                        j = r%width;
+                        continue;
                     }
 
                     u = c_max/3-1;
