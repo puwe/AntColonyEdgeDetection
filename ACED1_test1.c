@@ -293,13 +293,13 @@ void process_file(void)
             do{
                 r = rand()%A;
                 for(q=0; q<k; q++){
-                    if(ants[q*K+0] == r || eta[r] < t){
+                    if(ants[q*K] == r || eta[r] < t){
                         break;                       
                     }
                 }
                 c++;
             }while(q<k&&c<A);
-            ants[k*K+0]=r;
+            ants[k*K]=r;
         }
         printf("%d ants with memory length %d and steps %d are randomly dispatched.\n",K,M,L);
 
@@ -438,7 +438,7 @@ void process_file(void)
                         do{
                             r = rand()%A;
                             for(q=0; q<k; q++){
-                                if(ants[q*K+0] == r || eta[r] < t){
+                                if(ants[q*K] == r || eta[r] < t){
                                     break;                       
                                 }
                             }
@@ -468,7 +468,7 @@ void process_file(void)
                             do{
                                 r = rand()%A;
                                 for(q=0; q<k; q++){
-                                    if(ants[q*K+0] == r || eta[r] < t){
+                                    if(ants[q*K] == r || eta[r] < t){
                                         break;                       
                                     }
                                 }
@@ -483,7 +483,7 @@ void process_file(void)
                         do{
                             r = rand()%A;
                             for(q=0; q<k; q++){
-                                if(ants[q*K+0] == r || eta[r] < t){
+                                if(ants[q*K] == r || eta[r] < t){
                                     break;                       
                                 }
                             }
@@ -509,7 +509,7 @@ void process_file(void)
                     q = ants[k*K+l];
                     tau[q] += eta[q];
                 }
-                ants[k*K+0] = q; //ants[k*K+L-1];
+                ants[k*K] = q; //ants[k*K+L-1];
             } 
         }
 
