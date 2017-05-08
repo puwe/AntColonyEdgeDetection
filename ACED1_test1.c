@@ -188,6 +188,7 @@ void process_file(void)
         float beta = 2;
         // pheromone evaporation rate
         float rho = 0.02;
+        float rho_tmp = 1-rho;
         // ant moving steps
         unsigned int L = 3*K;
         // ant memory
@@ -499,7 +500,7 @@ void process_file(void)
 
             for(i=0; i<height; i++){
                 for(j=0; j<width; j++){
-                    tau[i*width+j] = (1-rho)*tau[i*width+j];
+                    tau[i*width+j] = rho_tmp*tau[i*width+j];
                 }
             }
 
@@ -508,7 +509,7 @@ void process_file(void)
                     q = ants[k*K+l];
                     tau[q] += eta[q];
                 }
-                ants[k*K+0]=ants[k*K+L-1];
+                ants[k*K+0] = q; //ants[k*K+L-1];
             } 
         }
 
