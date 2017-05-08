@@ -177,11 +177,11 @@ void process_file(void)
         printf("Grayscale conversion of %dx%d image finished\n", height, width);
         // Initialization
         // image area
-        unsigned long int A = height*width;
+        unsigned int A = height*width;
         // image perimeter
-        unsigned long int P = 2*(height+width);
+        unsigned int P = 2*(height+width);
         // ant number
-        unsigned long int K = floor(sqrt(A));
+        unsigned int K = floor(sqrt(A));
         // pheromone
         float tau_init = 1e-4;
         float alpha = 2;
@@ -189,9 +189,9 @@ void process_file(void)
         // pheromone evaporation rate
         float rho = 0.02;
         // ant moving steps
-        unsigned long int L = 3*K;
+        unsigned int L = 3*K;
         // ant memory
-        unsigned long int M = floor(sqrt(P));
+        unsigned int M = floor(sqrt(P));
         // construction iterations
         unsigned int N = 3;
         // theoretical probability
@@ -199,8 +199,8 @@ void process_file(void)
         // pheromone control thredshold
         float t = 0.1;
         // K ants moving L steps
-        unsigned long int* ants = (unsigned long int*) malloc(K*L*sizeof(unsigned long int));
-        unsigned long int i,j,l,m,k,n,r,q,c;
+        unsigned int* ants = (unsigned int*) malloc(K*L*sizeof(unsigned int));
+        unsigned int i,j,l,m,k,n,r,q,c;
         printf("N: %d alpha: %.2f beta: %.2f rho: %.2f t: %.2f p_th: %.2f\n", N, alpha, beta, rho, t, p_th); 
         float* tau = (float*) malloc(height*width*sizeof(float));
         for(i=0; i<height; i++){
@@ -286,7 +286,7 @@ void process_file(void)
             }
         } 
         printf("Initialized heuristic information eta\n");
-
+        
         for(k=0; k<K; k++){
             c = 0;
             do{
@@ -452,8 +452,8 @@ void process_file(void)
                     u = c_max/3-1;
                     v = c_max%3-1;
 
-                    long int i_new = i + u;
-                    long int j_new = j + v;
+                    int i_new = i + u;
+                    int j_new = j + v;
 
                     if(i_new>=0&&i_new<height&&j_new>=0&&j_new<width){
                         q = i_new*width + j_new;
