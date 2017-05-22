@@ -28,8 +28,8 @@ float p_th = 0.01;
 // pheromone control thredshold
 float t = 0.10;
 // block size
-unsigned int bx = 128;
-unsigned int by = 128;
+unsigned int bx = 256;
+unsigned int by = 256;
 
 void abort_(const char * s, ...)
 {
@@ -375,6 +375,15 @@ void ACED_Block(unsigned int x0, unsigned int y0, unsigned int width, unsigned i
                             c_max = c;
                         }
                     }
+		    float p_re = p[0];
+		    unsigned int c_re = 1;
+		    for(c=1; c<9; c++){
+			if(p_re==p[c]){
+			    c_re++;
+			}
+		    }
+		    if(c_re>=8){c_max=4;}
+
 
                     float p_r = (float) rand()/RAND_MAX;
                     if(p_r<p_th){
@@ -656,7 +665,7 @@ int main(int argc, char **argv)
         //ACED_Block(b,b,b,b);
         diff = clock() - start;
         int msec = diff * 1000 / CLOCKS_PER_SEC;
-        printf("Time taken %d seconds %d milliseconds", msec/1000, msec%1000);
+        printf("Time taken %d seconds %d milliseconds\n", msec/1000, msec%1000);
         
         write_png_file(argv[2]);
 
