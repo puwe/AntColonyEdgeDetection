@@ -27,9 +27,9 @@ void abort_(const char * s, ...)
         abort();
 }
 
-int x, y;
+unsigned int x, y;
 
-int width, height;
+unsigned int width, height;
 png_byte color_type;
 png_byte bit_depth;
 
@@ -188,6 +188,7 @@ void process_file(void)
         float beta = 2;
         // pheromone evaporation rate
         float rho = 0.02;
+        float rho_tmp = 1-rho;
         // ant moving steps
         unsigned int L = 3*K;
         // ant memory
@@ -199,10 +200,10 @@ void process_file(void)
         // pheromone control thredshold
         float t = 0.1;
         // K ants moving L steps
-        unsigned int ants[K][L];
+        unsigned int* ants = (unsigned int*) malloc(K*L*sizeof(unsigned int));
         unsigned int i,j,l,m,k,n,r,q,c;
         printf("N: %d alpha: %.2f beta: %.2f rho: %.2f t: %.2f p_th: %.2f\n", N, alpha, beta, rho, t, p_th); 
-        float tau[height*width];
+        float* tau = (float*) malloc(height*width*sizeof(float));
         for(i=0; i<height; i++){
             for(j=0; j<width; j++){
                 tau[width*i+j] = tau_init;
@@ -210,7 +211,7 @@ void process_file(void)
         }
         printf("Initialized pheromone matrix tau to %f\n",tau_init);
         
-        float eta[height*width];
+        float* eta = (float*) malloc(height*width*sizeof(float));
         float I_diff;
         int u,v,w,s;
         for(i=2; i<height-2; i++){
@@ -286,25 +287,25 @@ void process_file(void)
             }
         } 
         printf("Initialized heuristic information eta\n");
-
+        
         for(k=0; k<K; k++){
             c = 0;
             do{
                 r = rand()%A;
                 for(q=0; q<k; q++){
-                    if(ants[q][0] == r || eta[r] < t){
+                    if(ants[q*K] == r || eta[r] < t){
                         break;                       
                     }
                 }
                 c++;
             }while(q<k&&c<A);
-            ants[k][0]=r;
+            ants[k*K]=r;
         }
         printf("%d ants with memory length %d and steps %d are randomly dispatched.\n",K,M,L);
 
         for(n=0; n<N; n++){            
             for(k=0; k<K; k++){
-                q = ants[k][0];
+                q = ants[k*K+0];
                 i = q/width;
                 j = q%width;
                 
@@ -407,7 +408,7 @@ void process_file(void)
                     for(m=0; m<M; m++){
                         s = l-1-m;
                         if(s>=0){
-                            w = ants[k][s];
+                            w = ants[k*K+s];
                             u = w/width - i;
                             v = w%width - j;
                             if(1==fmax(abs(u),abs(v))){
@@ -426,6 +427,14 @@ void process_file(void)
                             c_max = c;
                         }
                     }
+		    float p_re = p[0];
+		    unsigned int c_re = 1;
+		    for(c=1; c<9; c++){
+			if(p_re==p[c]){
+			    c_re++;
+			}
+		    }
+		    if(c_re>=8){c_max=4;}
 
                     float p_r = (float) rand()/RAND_MAX;
                     if(p_r<p_th){
@@ -437,13 +446,13 @@ void process_file(void)
                         do{
                             r = rand()%A;
                             for(q=0; q<k; q++){
-                                if(ants[q][0] == r || eta[r] < t){
+                                if(ants[q*K] == r || eta[r] < t){
                                     break;                       
                                 }
                             }
                             c++;
                         }while(q<k&&c<A);
-                        ants[k][l] = r;
+                        ants[k*K+l] = r;
                         i = r/width;
                         j = r%width;
                         continue;
@@ -458,7 +467,7 @@ void process_file(void)
                     if(i_new>=0&&i_new<height&&j_new>=0&&j_new<width){
                         q = i_new*width + j_new;
                         if(eta[q]>=t){
-                            ants[k][l] = q;
+                            ants[k*K+l] = q;
                             i = i_new;
                             j = j_new;
                         }
@@ -467,13 +476,13 @@ void process_file(void)
                             do{
                                 r = rand()%A;
                                 for(q=0; q<k; q++){
-                                    if(ants[q][0] == r || eta[r] < t){
+                                    if(ants[q*K] == r || eta[r] < t){
                                         break;                       
                                     }
                                 }
                                 c++;
                             }while(q<k&&c<A);
-                            ants[k][l] = r;
+                            ants[k*K+l] = r;
                             i = r/width;
                             j = r%width;
                         }
@@ -482,13 +491,13 @@ void process_file(void)
                         do{
                             r = rand()%A;
                             for(q=0; q<k; q++){
-                                if(ants[q][0] == r || eta[r] < t){
+                                if(ants[q*K] == r || eta[r] < t){
                                     break;                       
                                 }
                             }
                             c++;
                         }while(q<k&&c<A);
-                        ants[k][l] = r;
+                        ants[k*K+l] = r;
                         i = r/width;
                         j = r%width;
 
@@ -499,16 +508,16 @@ void process_file(void)
 
             for(i=0; i<height; i++){
                 for(j=0; j<width; j++){
-                    tau[i*width+j] = (1-rho)*tau[i*width+j];
+                    tau[i*width+j] = rho_tmp*tau[i*width+j];
                 }
             }
 
             for(k=0; k<K; k++){
                 for(l=0; l<L; l++){
-                    q = ants[k][l];
+                    q = ants[k*K+l];
                     tau[q] += eta[q];
                 }
-                ants[k][0]=ants[k][L-1];
+                ants[k*K] = q; //ants[k*K+L-1];
             } 
         }
 
@@ -552,7 +561,7 @@ int main(int argc, char **argv)
         process_file();
         diff = clock() - start;
         int msec = diff * 1000 / CLOCKS_PER_SEC;
-        printf("Time taken %d seconds %d milliseconds", msec/1000, msec%1000);
+        printf("Time taken %d seconds %d milliseconds\n", msec/1000, msec%1000);
         
         write_png_file(argv[2]);
 
