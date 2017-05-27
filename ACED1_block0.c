@@ -382,7 +382,7 @@ void ACED_Block(unsigned int x0, unsigned int y0, unsigned int width, unsigned i
 			    c_re++;
 			}
 		    }
-		    if(c_re>=8){c_max=4;}
+		    if(c_re>=8){c_max=rand()%9;}
 
 
                     float p_r = (float) rand()/RAND_MAX;
