@@ -434,7 +434,7 @@ void process_file(void)
 			    c_re++;
 			}
 		    }
-		    if(c_re>=8){c_max=4;}
+		    if(c_re>=8){c_max=rand()%9;}
 
                     float p_r = (float) rand()/RAND_MAX;
                     if(p_r<p_th){
