@@ -427,14 +427,14 @@ void process_file(void)
                             c_max = c;
                         }
                     }
-		    float p_re = p[0];
+		    /*float p_re = p[0];
 		    unsigned int c_re = 1;
 		    for(c=1; c<9; c++){
 			if(p_re==p[c]){
 			    c_re++;
 			}
 		    }
-		    if(c_re>=8){c_max=rand()%9;}
+		    if(c_re>=8){c_max=rand()%9;}*/
 
                     float p_r = (float) rand()/RAND_MAX;
                     if(p_r<p_th){
